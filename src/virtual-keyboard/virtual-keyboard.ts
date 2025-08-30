@@ -276,7 +276,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
         const mf = focusedMathfield();
         if (
           mf &&
-          !mf.readOnly &&
+          (!mf.readOnly || mf.getPrompts().length > 0) &&
           mf.mathVirtualKeyboardPolicy === 'auto' &&
           isTouchCapable()
         )
