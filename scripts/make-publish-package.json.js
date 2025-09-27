@@ -19,7 +19,21 @@ const publishPackage = {
   main: rootPackage.main,
   module: rootPackage.module,
   types: rootPackage.types,
-  exports: rootPackage.exports,
+  // Simplified exports to avoid Vite dependency scan issues
+  exports: {
+    './vue': './vue-mathlive.mjs',
+    './fonts.css': './mathlive-fonts.css',
+    './static.css': './mathlive-static.css',
+    '.': {
+      types: './types/mathlive.d.ts',
+      import: './mathlive.min.mjs',
+      require: './mathlive.min.js',
+    },
+    './ssr': {
+      types: './types/mathlive-ssr.d.ts',
+      import: './mathlive-ssr.min.mjs',
+    },
+  },
   dependencies: rootPackage.dependencies,
   files: [
     // Optional: if you want to be explicit
