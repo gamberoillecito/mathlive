@@ -1,4 +1,19 @@
 <!doctype html>
+<script lang="ts">
+  function testSetPromptValue(){
+    let mf = document.getElementById('mf-prompt');
+    mf.setPromptValue('numerator', '12', {});
+  }
+  function testSetPromptValueSilence(){
+    let mf = document.getElementById('mf-prompt');
+    mf.setPromptValue('numerator', '\\text{silence}', {silenceNotifications:true});
+  }
+  
+  function testSetValue(){
+    let mf = document.getElementById('mf-no-prompt');
+    mf.value = "\\text{new value}";
+  }
+</script>
 <html lang="en-US">
   <head>
     <meta charset="utf-8" />
@@ -44,6 +59,20 @@
         <math-field id="mf-prompt" readonly
           >x=\frac{\placeholder[numerator]{x}}{\placeholder[denominator]{y}}}}</math-field
         >
+        
+        <input type="button" 
+          value="mf.setPromptValue"
+          onclick="testSetPromptValue()"/>
+        
+        <input type="button" 
+          value="mf.setPromptValue silenceNotifications" 
+          onclick="testSetPromptValueSilence()"/>
+        
+        <math-field id="mf-no-prompt" readonly
+          >\text{initial value}</math-field
+        >
+
+        <input type="button" value="set mf.value" onclick="testSetValue()"/>
         <textarea>textarea</textarea>
         <math-field
           >x=\frac{\placeholder{33}}{\placeholder{}}+\frac{1}{}+\placeholder{}</math-field

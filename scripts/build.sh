@@ -28,7 +28,7 @@ npx check-node-version --package
 # If no "node_modules" directory, do an install first
 if [ ! -d "./node_modules" ]; then
     printf "$BASENAME${DOT}Installing dependencies"
-    npm install
+    pnpm install
     echo -e "${LINECLEAR}$BASENAME${CHECK}Dependencies installed"
 fi
 

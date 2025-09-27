@@ -1,10 +1,10 @@
 language: node_js
 node_js: [lts/*]
 before_install: [npm install -g npm@latest]
-install: [npm ci]
+install: [pnpm ci]
 script:
-    - npm run lint
-    - npm run dist
+    - pnpm run lint
+    - pnpm run dist
 cache:
     directories:
         - node_modules

@@ -1616,6 +1616,14 @@ set disabled(value: boolean): void
 
 <MemberCard>
 
+##### MathfieldElement.hasEditableContent
+
+True if the mathfield has editable content, such as unlocked prompts
+
+</MemberCard>
+
+<MemberCard>
+
 ##### MathfieldElement.mode
 
 ```ts

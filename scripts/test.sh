@@ -11,7 +11,7 @@ cd "$(dirname "$0")/.."
 VARIANT="${1-test}"
 
 if [ ! -d "./dist/types" ]; then
-    npm run build
+    pnpm run build
 fi
 
 exit_code=0
