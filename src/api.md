@@ -1598,7 +1598,7 @@ Consider using this option if you are displaying untrusted content. Read more ab
 ##### MathfieldElement.version
 
 ```ts
-static version: string = '0.107.0';
+static version: string = '0.107.1';
 ```
 
 </MemberCard>
@@ -5855,6 +5855,38 @@ See [`setKeyboardLayout`](#setkeyboardlayout).
 
 </MemberCard>
 
+<MemberCard>
+
+### setKeyboardLayout()
+
+```ts
+function setKeyboardLayout(name): void
+```
+
+Change the current physical keyboard layout.
+
+##### name
+
+`"auto"` | [`KeyboardLayoutName`](#keyboardlayoutname)
+
+</MemberCard>
+
+<MemberCard>
+
+### setKeyboardLayoutLocale()
+
+```ts
+function setKeyboardLayoutLocale(locale): void
+```
+
+Change the current physical keyboard layout to match the specified locale.
+
+##### locale
+
+`string`
+
+</MemberCard>
+
 ## Static Rendering
 
 <MemberCard>
@@ -6442,7 +6474,7 @@ const version: {
 };
 ```
 
-Current version: `0.107.0`
+Current version: `0.107.1`
 
 The version string of the SDK using the [semver](https://semver.org/) convention:
 
@@ -6451,33 +6483,5 @@ The version string of the SDK using the [semver](https://semver.org/) convention
 * **`MAJOR`** is incremented for incompatible API changes
 * **`MINOR`** is incremented for new features
 * **`PATCH`** is incremented for bug fixes
-
-</MemberCard>
-
-<MemberCard>
-
-### setKeyboardLayout()
-
-```ts
-function setKeyboardLayout(name): KeyboardLayout
-```
-
-##### name
-
-`"auto"` | [`KeyboardLayoutName`](#keyboardlayoutname)
-
-</MemberCard>
-
-<MemberCard>
-
-### setKeyboardLayoutLocale()
-
-```ts
-function setKeyboardLayoutLocale(locale): void
-```
-
-##### locale
-
-`string`
 
 </MemberCard>

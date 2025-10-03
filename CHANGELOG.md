@@ -1,10 +1,13 @@
-## [Unreleased]
+## 0.107.1 _2025-09-30_
 
 ### Resolved Issues
 
 - **#2817** Calling `setPromptValue()` no longer changes the focus to the
   mathfield.
 - **#2805** On mobile, show the math virtual keyboard when using prompts
+- Custom macros are now read when using speakable text to speech.
+- **#2824** Using TypeScript would trigger a compile error about
+  `Cannot find module '../editor/keyboard-layout'`
 
 ## 0.107.0 _2025-08-17_
 
