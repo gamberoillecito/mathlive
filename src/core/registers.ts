@@ -80,7 +80,7 @@ const DEFAULT_REGISTERS: Registers = {
   'arraycolsep': { dimension: 5 },
 
   // Two values from LaTeX source2e:
-  'fboxsep': { dimension: 4 }, // From letter.dtx:1626
+  'fboxsep': { dimension: 3 }, // From letter.dtx:1626
   'fboxrule': { dimension: 0.4 }, // From letter.dtx:1627
 
   'z@skip': {
