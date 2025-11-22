@@ -147,16 +147,16 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     this.rebuild();
   }
 
-  private _layouts: Readonly<(VirtualKeyboardName | VirtualKeyboardLayout)[]>;
+  private _layouts: readonly (VirtualKeyboardName | VirtualKeyboardLayout)[];
 
-  get layouts(): Readonly<(VirtualKeyboardName | VirtualKeyboardLayout)[]> {
+  get layouts(): readonly (VirtualKeyboardName | VirtualKeyboardLayout)[] {
     return this._layouts;
   }
   set layouts(
     value:
       | 'default'
       | (VirtualKeyboardName | VirtualKeyboardLayout)[]
-      | Readonly<(VirtualKeyboardName | VirtualKeyboardLayout)[]>
+      | readonly (VirtualKeyboardName | VirtualKeyboardLayout)[]
   ) {
     this.updateNormalizedLayouts(value);
     this.rebuild();
@@ -166,7 +166,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     value:
       | 'default'
       | (VirtualKeyboardName | VirtualKeyboardLayout)[]
-      | Readonly<(VirtualKeyboardName | VirtualKeyboardLayout)[]>
+      | readonly (VirtualKeyboardName | VirtualKeyboardLayout)[]
   ): void {
     const layouts = Array.isArray(value) ? [...value] : [value];
     const defaultIndex = layouts.findIndex((x) => x === 'default');
@@ -594,9 +594,12 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
           'SecurityError'
         );
       }
-      if (evt.data.action === 'disconnect')
+      if (evt.data.action === 'disconnect') {
+        // Ignore ALL disconnect requests while VK is visible
+        if (this._visible) return;
+
         this.connectedMathfieldWindow = undefined;
-      else if (
+      } else if (
         evt.data.action !== 'update-setting' &&
         evt.data.action !== 'proxy-created' &&
         evt.data.action !== 'execute-command'
@@ -647,11 +650,15 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     const { action } = msg;
     if (action === 'execute-command') {
       const { command } = msg;
-
-      // Avoid an infinite messages loop if within one window
       const commandTarget = getCommandTarget(command!);
-      if (window.top !== undefined && commandTarget !== 'virtual-keyboard')
-        return;
+
+      // If we're in the top window and receiving a message from an iframe,
+      // don't handle it here (the iframe's mathfield will handle it)
+      if (window === window.top && source !== window) return;
+
+      // If we're in the top window and receiving our own message for a
+      // mathfield command, don't re-execute it (we already sent it)
+      if (window === window.top && commandTarget !== 'virtual-keyboard') return;
 
       this.executeCommand(command!);
       return;
@@ -738,7 +745,6 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
     }
 
     if (!target) target = this.connectedMathfieldWindow;
-
     if (
       this.targetOrigin === null ||
       this.targetOrigin === 'null' ||
@@ -747,6 +753,7 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
       window.dispatchEvent(
         new MessageEvent('message', {
           source: window,
+          origin: window.origin,
           data: {
             type: VIRTUAL_KEYBOARD_MESSAGE,
             action,
@@ -850,6 +857,9 @@ export class VirtualKeyboard implements VirtualKeyboardInterface, EventTarget {
   }
 
   disconnect(): void {
+    // Ignore ALL disconnect requests while VK is visible
+    if (this._visible) return;
+
     this.connectedMathfieldWindow = undefined;
   }
 
