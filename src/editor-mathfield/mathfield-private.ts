@@ -176,7 +176,7 @@ export class _Mathfield implements Mathfield, KeyboardDelegateInterface {
 
   container: HTMLElement;
   field: HTMLElement;
-  readonly ariaLiveText: HTMLElement;
+  readonly ariaLiveText: HTMLElement | undefined;
   // readonly accessibleMathML: HTMLElement;
 
   atomBoundsCache?: Map<string, Rect>;
@@ -436,9 +436,12 @@ If you are using Vue, this may be because you are using the runtime-only build o
         else {
           window.mathVirtualKeyboard.show({ animate: true });
           window.mathVirtualKeyboard.update(makeProxy(this));
+          // Scroll after VK slide-in animation completes (0.28s)
+          setTimeout(() => this.scrollIntoView(), 300);
         }
         ev.preventDefault();
         ev.stopPropagation();
+        if (!this.hasFocus()) this.focus({ preventScroll: true });
       },
       { signal }
     );
@@ -475,7 +478,8 @@ If you are using Vue, this may be because you are using the runtime-only build o
     )
       menuToggle.style.display = 'none';
 
-    this.ariaLiveText = this.element.querySelector('[role=status]')!;
+    this.ariaLiveText =
+      this.element.querySelector<HTMLElement>('[role=status]') ?? undefined;
     // this.accessibleMathML = this.element.querySelector('.accessibleMathML')!;
 
     // Capture clipboard events
@@ -899,8 +903,12 @@ If you are using Vue, this may be because you are using the runtime-only build o
           this.hasFocus() &&
           this.options.mathVirtualKeyboardPolicy !== 'manual'
         ) {
+          // Prevent the blur/focus cycle from triggering onBlur/onFocus
+          // which would disconnect/reconnect the virtual keyboard
+          this.focusBlurInProgress = true;
           this.keyboardDelegate.blur();
           this.keyboardDelegate.focus();
+          this.focusBlurInProgress = false;
         }
         break;
 
@@ -1685,12 +1693,13 @@ If you are using Vue, this may be because you are using the runtime-only build o
       const mode = cursor.mode ?? effectiveMode(this.options);
       if (
         latexGroup &&
-        (pos < model.offsetOf(latexGroup.firstChild) - 1 ||
-          pos > model.offsetOf(latexGroup.lastChild) + 1)
+        (pos < model.offsetOf(latexGroup.firstChild) ||
+          pos > model.offsetOf(latexGroup.lastChild))
       ) {
         // We moved outside a LaTeX group
         complete(this, 'accept', { mode });
-        model.position = model.offsetOf(cursor);
+        const cursorOffset = model.offsetOf(cursor);
+        if (cursorOffset >= 0) model.position = cursorOffset;
       } else {
         // If we're at the start or the end of a LaTeX group,
         // move inside the group and don't switch mode.
@@ -1838,7 +1847,7 @@ If you are using Vue, this may be because you are using the runtime-only build o
     if (_Mathfield._globallyFocusedMathfield === this)
       _Mathfield._globallyFocusedMathfield = undefined;
 
-    this.ariaLiveText!.textContent = '';
+    if (this.ariaLiveText) this.ariaLiveText.textContent = '';
 
     hideSuggestionPopover(this);
 

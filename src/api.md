@@ -1621,7 +1621,7 @@ Consider using this option if you are displaying untrusted content. Read more ab
 ##### MathfieldElement.version
 
 ```ts
-static version: string = '0.108.2';
+static version: string = '0.108.3';
 ```
 
 </MemberCard>
@@ -6234,7 +6234,7 @@ convertLatexToAsciiMath("\\frac{1}{2}");
 
 `string`
 
-##### parseMode
+##### parseMode?
 
 `ParseMode` = `'math'`
 
@@ -6306,7 +6306,7 @@ Convert a LaTeX string to a string of MathML markup.
 A string of valid LaTeX. It does not have to start
 with a mode token such as a `$$` or `\(`.
 
-##### options
+##### options?
 
 ###### generateID?
 
@@ -6859,7 +6859,7 @@ const version: {
 };
 ```
 
-Current version: `0.108.2`
+Current version: `0.108.3`
 
 The version string of the SDK using the [semver](https://semver.org/) convention:
 
